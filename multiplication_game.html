@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐰 乘數表大冒險</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --pink: #ff8fb2; --pink-dark: #f06292;
+    --blue: #7cc5ff; --blue-dark: #42a5f5;
+    --yellow: #ffd66b; --green: #7ee8a2; --green-dark: #4caf7d;
+    --purple: #b39dff; --red: #ff6b6b;
+    --ink: #4a3b52; --cream: #fff8ee;
+  }
+  body {
+    font-family: "Comic Sans MS", "Chalkboard SE", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: linear-gradient(160deg, #ffe9f3 0%, #e3f2ff 50%, #fff6d9 100%);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; color: var(--ink);
+    user-select: none;
+  }
+  /* 漂浮背景裝飾 */
+  .bg-bubble {
+    position: fixed; border-radius: 50%; opacity: .45; pointer-events: none; z-index: 0;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); }
+    100% { transform: translateY(-15vh) rotate(360deg); }
+  }
+  #stage {
+    position: relative; z-index: 2; width: min(92vw, 560px); text-align: center;
+  }
+  .card {
+    background: var(--cream); border-radius: 32px; padding: 32px 28px;
+    box-shadow: 0 12px 0 rgba(74,59,82,.12), 0 24px 48px rgba(74,59,82,.18);
+    border: 4px solid #fff;
+    animation: cardPop .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes cardPop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .hidden { display: none !important; }
+
+  /* ===== 開始畫面 ===== */
+  .mascot { font-size: 72px; display: inline-block; animation: bounce 1.2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-16px);} }
+  h1 {
+    font-size: clamp(30px, 7vw, 44px); color: var(--pink-dark);
+    text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(240,98,146,.25);
+    letter-spacing: 2px; margin: 8px 0 4px;
+  }
+  .subtitle { font-size: 16px; color: #8a7a94; margin-bottom: 18px; }
+  .rule-box {
+    background: #f4ecff; border-radius: 18px; padding: 14px 18px; margin: 0 auto 20px;
+    font-size: 15px; line-height: 1.9; text-align: left; max-width: 380px;
+    border: 3px dashed var(--purple);
+  }
+  .btn {
+    font-family: inherit; font-size: 20px; font-weight: bold; cursor: pointer;
+    padding: 14px 44px; border: none; border-radius: 999px; color: #fff;
+    background: linear-gradient(180deg, var(--pink), var(--pink-dark));
+    box-shadow: 0 6px 0 #d14d7e, 0 10px 18px rgba(209,77,126,.35);
+    transition: transform .12s, box-shadow .12s; letter-spacing: 2px;
+  }
+  .btn:hover { transform: translateY(-3px) scale(1.04); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #d14d7e; }
+  .best-tag { margin-top: 16px; font-size: 15px; color: #b8860b; font-weight: bold; }
+
+  /* ===== 遊戲畫面 HUD ===== */
+  .hud { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .score-board {
+    background: #fff; border-radius: 16px; padding: 6px 16px; min-width: 110px;
+    box-shadow: 0 4px 0 rgba(74,59,82,.1); border: 3px solid var(--yellow);
+  }
+  .score-label { font-size: 11px; color: #b0a0ba; letter-spacing: 1px; }
+  #score { font-size: 26px; font-weight: bold; color: #e6a700; transition: transform .15s; }
+  #score.pop { transform: scale(1.35); }
+  .lives { font-size: 24px; letter-spacing: 3px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.12)); }
+  .lives span { display: inline-block; transition: all .3s; }
+  .lives span.lost { filter: grayscale(1); opacity: .3; transform: scale(.8); }
+  .level-tag {
+    background: var(--purple); color: #fff; font-size: 13px; font-weight: bold;
+    border-radius: 999px; padding: 5px 14px; box-shadow: 0 3px 0 #8f79e0;
+  }
+  .combo-box { height: 30px; margin-bottom: 6px; }
+  #combo {
+    display: inline-block; font-size: 19px; font-weight: bold; color: #fff;
+    background: linear-gradient(90deg, #ff9a56, #ff5e8a); border-radius: 999px;
+    padding: 4px 18px; opacity: 0; transform: scale(.5); transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  #combo.show { opacity: 1; transform: scale(1); animation: comboWiggle .4s ease infinite alternate; }
+  @keyframes comboWiggle { from { transform: scale(1) rotate(-2deg);} to { transform: scale(1.08) rotate(2deg);} }
+
+  /* 計時條 */
+  .timer-track { height: 16px; background: #efe4f5; border-radius: 999px; overflow: hidden; margin-bottom: 18px; border: 3px solid #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,.08); }
+  #timerBar {
+    height: 100%; width: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, var(--green), var(--green-dark));
+    transition: width .1s linear, background .3s;
+  }
+  #timerBar.warn { background: linear-gradient(90deg, var(--yellow), #ff9f43); }
+  #timerBar.danger { background: linear-gradient(90deg, var(--red), #d63031); }
+
+  /* 題目 */
+  .question-box {
+    background: linear-gradient(180deg, #fff, #fdf3ff); border-radius: 24px;
+    padding: 22px 10px; margin-bottom: 20px; border: 4px solid var(--blue);
+    box-shadow: 0 6px 0 rgba(66,165,245,.25);
+  }
+  #question { font-size: clamp(38px, 9vw, 56px); font-weight: bold; color: var(--blue-dark); letter-spacing: 4px; }
+  #question.zoom { animation: qZoom .35s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes qZoom { 0% { transform: scale(.3); opacity: 0;} 100% { transform: scale(1); opacity: 1;} }
+
+  /* 答案按鈕 */
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ans {
+    font-family: inherit; font-size: clamp(24px, 6vw, 32px); font-weight: bold;
+    padding: 18px 8px; border-radius: 22px; border: 4px solid #fff; cursor: pointer;
+    color: #fff; position: relative;
+    box-shadow: 0 6px 0 rgba(0,0,0,.15);
+    transition: transform .12s, box-shadow .12s, filter .2s;
+  }
+  .ans:hover { transform: translateY(-4px) scale(1.03); }
+  .ans:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.15); }
+  .ans .key-hint {
+    position: absolute; top: 6px; left: 10px; font-size: 12px; opacity: .75;
+    background: rgba(255,255,255,.3); border-radius: 6px; padding: 1px 7px;
+  }
+  .ans.correct { background: var(--green-dark) !important; animation: correctPulse .45s ease; }
+  .ans.wrong   { background: var(--red) !important; animation: shake .4s ease; }
+  .ans.dim { filter: grayscale(.6) opacity(.55); pointer-events: none; }
+  .ans:disabled { pointer-events: none; }
+  @keyframes correctPulse { 0%{transform:scale(1);} 40%{transform:scale(1.12);} 100%{transform:scale(1);} }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-9px);} 40%{transform:translateX(9px);} 60%{transform:translateX(-6px);} 80%{transform:translateX(6px);} }
+  .shake-screen { animation: shakeScreen .4s ease; }
+  @keyframes shakeScreen { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-10px);} 50%{transform:translateX(10px);} 75%{transform:translateX(-6px);} }
+
+  /* 粒子 */
+  .particle { position: fixed; pointer-events: none; z-index: 99; border-radius: 50%; }
+  .float-score {
+    position: fixed; pointer-events: none; z-index: 99; font-weight: bold; font-size: 26px;
+    color: #ff9f1a; text-shadow: 2px 2px 0 #fff; animation: floatScore 1s ease-out forwards;
+  }
+  @keyframes floatScore { 0%{opacity:1; transform:translateY(0) scale(.6);} 30%{transform:translateY(-20px) scale(1.2);} 100%{opacity:0; transform:translateY(-70px) scale(1);} }
+
+  /* 全屏閃爍 */
+  #flash { position: fixed; inset: 0; pointer-events: none; z-index: 98; opacity: 0; }
+  #flash.good { background: radial-gradient(circle, rgba(126,232,162,.5), transparent 70%); animation: flashAnim .45s ease; }
+  #flash.bad  { background: radial-gradient(circle, rgba(255,107,107,.55), transparent 70%); animation: flashAnim .45s ease; }
+  @keyframes flashAnim { 0%{opacity:1;} 100%{opacity:0;} }
+
+  /* ===== 結束畫面 ===== */
+  .gameover-emoji { font-size: 64px; animation: bounce 1.2s ease-in-out infinite; display: inline-block; }
+  .final-score { font-size: 54px; font-weight: bold; color: var(--pink-dark); margin: 6px 0; text-shadow: 2px 2px 0 #fff; }
+  .final-line { font-size: 16px; color: #8a7a94; margin-bottom: 6px; }
+  #newRecord {
+    display: inline-block; background: linear-gradient(90deg,#ffd66b,#ff9a56); color: #fff;
+    font-weight: bold; border-radius: 999px; padding: 5px 18px; margin: 6px 0 14px;
+    animation: recordGlow 1s ease infinite alternate; font-size: 15px;
+  }
+  @keyframes recordGlow { from { transform: scale(1); box-shadow: 0 0 8px #ffd66b;} to { transform: scale(1.08); box-shadow: 0 0 22px #ff9a56;} }
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn.secondary {
+    background: linear-gradient(180deg, var(--blue), var(--blue-dark));
+    box-shadow: 0 6px 0 #2f8fe0, 0 10px 18px rgba(47,143,224,.35);
+  }
+  .btn.secondary:active { box-shadow: 0 2px 0 #2f8fe0; }
+  .kbd-tip { margin-top: 14px; font-size: 12px; color: #b0a0ba; }
+</style>
+</head>
+<body>
+<div id="flash"></div>
+
+<div id="stage">
+
+  <!-- 開始畫面 -->
+  <div class="card" id="startScreen">
+    <div class="mascot">🐰</div>
+    <h1>乘數表大冒險</h1>
+    <p class="subtitle">和兔子一起背熟乘法表，挑戰最高分吧！</p>
+    <div class="rule-box">
+      ⏱️ 每題都有時間限制，越快答對分數越高<br>
+      ❤️ 答錯或超時會扣 1 顆愛心，共 3 顆<br>
+      🔥 連續答對可累積 Combo 加倍得分<br>
+      ⌨️ 也可以用鍵盤 <b>1~4</b> 或 <b>A~D</b> 作答
+    </div>
+    <button class="btn" id="startBtn">🚀 開始挑戰</button>
+    <div class="best-tag" id="startBest"></div>
+  </div>
+
+  <!-- 遊戲畫面 -->
+  <div class="card hidden" id="gameScreen">
+    <div class="hud">
+      <div class="score-board">
+        <div class="score-label">SCORE 分數</div>
+        <div id="score">0</div>
+      </div>
+      <div class="level-tag" id="levelTag">Lv.1</div>
+      <div class="lives" id="lives"></div>
+    </div>
+    <div class="combo-box"><span id="combo">🔥 Combo x2</span></div>
+    <div class="timer-track"><div id="timerBar"></div></div>
+    <div class="question-box"><div id="question">7 × 8 = ?</div></div>
+    <div class="answers" id="answers"></div>
+    <div class="kbd-tip">提示：按鍵盤 1~4 或 A~D 快速作答</div>
+  </div>
+
+  <!-- 結束畫面 -->
+  <div class="card hidden" id="overScreen">
+    <div class="gameover-emoji" id="overEmoji">🌟</div>
+    <h1>遊戲結束</h1>
+    <div class="final-line" id="finalLine"></div>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="final-line" id="finalBest"></div>
+    <div id="newRecord" class="hidden">🏆 新紀錄！你太厲害了！</div><br>
+    <div class="btn-row">
+      <button class="btn" id="restartBtn">🔄 重新開始</button>
+      <button class="btn secondary" id="homeBtn">🏠 回主頁</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== DOM ===== */
+  const $ = id => document.getElementById(id);
+  const startScreen = $('startScreen'), gameScreen = $('gameScreen'), overScreen = $('overScreen');
+  const scoreEl = $('score'), livesEl = $('lives'), levelTag = $('levelTag');
+  const comboEl = $('combo'), timerBar = $('timerBar'), questionEl = $('question'), answersEl = $('answers');
+  const flashEl = $('flash'), startBest = $('startBest');
+
+  /* ===== 狀態 ===== */
+  const HS_KEY = 'multGame_highScore_v1';
+  let highScore = parseInt(localStorage.getItem(HS_KEY) || '0', 10);
+  let score = 0, lives = 3, combo = 0, correctCount = 0, level = 1;
+  let currentAnswer = 0, timeLimit = 10000, timeLeft = 0, rafId = null, lastTick = 0;
+  let playing = false, locked = false;
+
+  const KEYMAP = { '1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3 };
+  const COLORS = [
+    ['#ff9fbe','#f06292'], ['#8ecdf7','#42a5f5'],
+    ['#ffd98a','#ffa726'], ['#b9a5ff','#7c6ff0']
+  ];
+
+  /* ===== 音效（Web Audio，無需外部檔案） ===== */
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function tone(freq, start, dur, type, vol) {
+    if (!audioCtx) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    const t = audioCtx.currentTime + start;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol || 0.18, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  const sfx = {
+    click:   () => tone(600, 0, 0.08, 'triangle', 0.12),
+    correct: () => { tone(523, 0, 0.12, 'sine', 0.2); tone(659, 0.09, 0.12, 'sine', 0.2); tone(784, 0.18, 0.22, 'sine', 0.22); },
+    wrong:   () => { tone(220, 0, 0.18, 'sawtooth', 0.14); tone(160, 0.15, 0.28, 'sawtooth', 0.14); },
+    tick:    () => tone(880, 0, 0.05, 'square', 0.06),
+    levelup: () => { tone(523, 0, 0.1, 'triangle', 0.18); tone(659, 0.08, 0.1, 'triangle', 0.18); tone(880, 0.16, 0.2, 'triangle', 0.2); },
+    gameover:() => { tone(392, 0, 0.2, 'sine', 0.18); tone(330, 0.2, 0.2, 'sine', 0.18); tone(262, 0.4, 0.35, 'sine', 0.18); tone(196, 0.65, 0.5, 'sine', 0.16); }
+  };
+
+  /* ===== 背景漂浮泡泡 ===== */
+  (function makeBubbles() {
+    const colors = ['#ffb3cd','#a8d8ff','#ffe29a','#c5b3ff','#a8ecc0'];
+    for (let i = 0; i < 12; i++) {
+      const b = document.createElement('div');
+      b.className = 'bg-bubble';
+      const s = 14 + Math.random() * 40;
+      b.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (Math.random()*100) +
+        'vw;background:' + colors[i % colors.length] +
+        ';animation-duration:' + (9 + Math.random()*10) + 's;animation-delay:-' + (Math.random()*12) + 's;';
+      document.body.appendChild(b);
+    }
+  })();
+
+  /* ===== 粒子爆炸 ===== */
+  function burst(x, y, color) {
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const s = 6 + Math.random() * 8;
+      p.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + s + 'px;height:' + s +
+        'px;background:' + (Math.random() < .5 ? color : '#ffd66b') + ';';
+      document.body.appendChild(p);
+      const ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 90;
+      p.animate([
+        { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+        { transform: 'translate(' + (Math.cos(ang)*dist - s/2) + 'px,' + (Math.sin(ang)*dist - s/2) + 'px) scale(0)', opacity: 0 }
+      ], { duration: 600 + Math.random()*300, easing: 'cubic-bezier(.2,.8,.4,1)' }).onfinish = () => p.remove();
+    }
+  }
+  function floatText(x, y, text) {
+    const f = document.createElement('div');
+    f.className = 'float-score'; f.textContent = text;
+    f.style.left = (x - 20) + 'px'; f.style.top = (y - 20) + 'px';
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 1000);
+  }
+  function flash(type) {
+    flashEl.className = ''; void flashEl.offsetWidth;
+    flashEl.className = type;
+  }
+
+  /* ===== 遊戲流程 ===== */
+  function showScreen(el) {
+    [startScreen, gameScreen, overScreen].forEach(s => s.classList.add('hidden'));
+    el.classList.remove('hidden');
+    el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+  }
+
+  function renderLives() {
+    livesEl.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const sp = document.createElement('span');
+      sp.textContent = '❤️';
+      if (i >= lives) sp.classList.add('lost');
+      livesEl.appendChild(sp);
+    }
+  }
+
+  function setScore(v) {
+    score = v; scoreEl.textContent = score;
+    scoreEl.classList.remove('pop'); void scoreEl.offsetWidth; scoreEl.classList.add('pop');
+  }
+
+  function genQuestion() {
+    // 隨著等級提升，數字範圍變大
+    const maxA = level >= 3 ? 9 : 7;
+    const a = 2 + Math.floor(Math.random() * (maxA - 1));
+    const b = 2 + Math.floor(Math.random() * (9 - 1));
+    currentAnswer = a * b;
+
+    const opts = new Set([currentAnswer]);
+    while (opts.size < 4) {
+      // 干擾項：接近正確答案的數
+      let d = currentAnswer + (Math.floor(Math.random() * 11) - 5);
+      if (d < 2) d = currentAnswer + 1 + Math.floor(Math.random() * 4);
+      if (!opts.has(d)) opts.add(d);
+    }
+    const arr = [...opts].sort(() => Math.random() - 0.5);
+
+    questionEl.textContent = a + ' × ' + b + ' = ?';
+    questionEl.classList.remove('zoom'); void questionEl.offsetWidth; questionEl.classList.add('zoom');
+
+    answersEl.innerHTML = '';
+    arr.forEach((val, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'ans';
+      btn.style.background = 'linear-gradient(180deg,' + COLORS[i][0] + ',' + COLORS[i][1] + ')';
+      btn.innerHTML = '<span class="key-hint">' + (i + 1) + ' / ' + 'ABCD'[i] + '</span>' + val;
+      btn.dataset.val = val;   // ★ 直接把答案數值存起來，避免從文字解析出錯
+      btn.addEventListener('click', () => pick(i, btn));
+      answersEl.appendChild(btn);
+    });
+
+    // 時間限制隨等級縮短：10s → 6s
+    timeLimit = Math.max(6000, 10000 - (level - 1) * 1000);
+    timeLeft = timeLimit; lastTick = performance.now();
+    updateTimerBar();
+  }
+
+  function updateTimerBar() {
+    const pct = Math.max(0, timeLeft / timeLimit * 100);
+    timerBar.style.width = pct + '%';
+    timerBar.className = pct < 20 ? 'danger' : (pct < 45 ? 'warn' : '');
+  }
+
+  function loop(now) {
+    if (!playing) return;
+    const dt = now - lastTick; lastTick = now;
+    if (!locked) {
+      timeLeft -= dt;
+      if (timeLeft <= 0) { timeLeft = 0; updateTimerBar(); onTimeout(); return; }
+      // 最後 3 秒滴答聲
+      if (timeLeft < 3000 && Math.ceil(timeLeft / 500) !== Math.ceil((timeLeft + dt) / 500)) sfx.tick();
+      updateTimerBar();
+    }
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function pick(i, btn) {
+    if (!playing || locked) return;
+    const val = parseInt(btn.dataset.val, 10);   // ★ 修正：textContent 會含鍵盤提示 '1 / A'，解析成 1A42 導致永遠答錯
+    if (val === currentAnswer) onCorrect(btn);
+    else onWrong(btn);
+  }
+
+  function onCorrect(btn) {
+    locked = true;
+    combo++; correctCount++;
+    const gained = 10 * Math.min(combo, 5) + Math.ceil(timeLeft / 1000);
+    setScore(score + gained);
+    sfx.correct();
+    flash('good');
+    btn.classList.add('correct');
+    [...answersEl.children].forEach(b => { if (b !== btn) b.classList.add('dim'); b.disabled = true; });
+
+    const r = btn.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, '#7ee8a2');
+    floatText(r.left + r.width / 2, r.top, '+' + gained);
+
+    if (combo >= 2) {
+      comboEl.textContent = '🔥 Combo x' + Math.min(combo, 5);
+      comboEl.classList.add('show');
+    }
+    const newLevel = Math.floor(correctCount / 5) + 1;
+    if (newLevel > level) {
+      level = newLevel; levelTag.textContent = 'Lv.' + level;
+      sfx.levelup();
+      const q = questionEl.getBoundingClientRect();
+      burst(q.left + q.width / 2, q.top + q.height / 2, '#b39dff');
+    }
+    setTimeout(() => { if (playing) { locked = false; genQuestion(); } }, 550);
+  }
+
+  function onWrong(btn) {
+    locked = true;
+    combo = 0; comboEl.classList.remove('show');
+    lives--; renderLives();
+    sfx.wrong(); flash('bad');
+    gameScreen.classList.remove('shake-screen'); void gameScreen.offsetWidth;
+    gameScreen.classList.add('shake-screen');
+    btn.classList.add('wrong');
+    [...answersEl.children].forEach(b => { b.disabled = true; if (parseInt(b.dataset.val, 10) === currentAnswer) b.classList.add('correct'); });
+
+    if (lives <= 0) {
+      setTimeout(gameOver, 900);
+    } else {
+      setTimeout(() => { if (playing) { locked = false; genQuestion(); } }, 1100);
+    }
+  }
+
+  function onTimeout() {
+    locked = true;
+    combo = 0; comboEl.classList.remove('show');
+    lives--; renderLives();
+    sfx.wrong(); flash('bad');
+    gameScreen.classList.remove('shake-screen'); void gameScreen.offsetWidth;
+    gameScreen.classList.add('shake-screen');
+    [...answersEl.children].forEach(b => { b.disabled = true; if (parseInt(b.dataset.val, 10) === currentAnswer) b.classList.add('correct'); else b.classList.add('dim'); });
+    if (lives <= 0) setTimeout(gameOver, 900);
+    else setTimeout(() => { if (playing) { locked = false; genQuestion(); } }, 1100);
+  }
+
+  function startGame() {
+    ensureAudio(); sfx.click();
+    score = 0; lives = 3; combo = 0; correctCount = 0; level = 1;
+    locked = false; playing = true;
+    scoreEl.textContent = '0';
+    levelTag.textContent = 'Lv.1';
+    comboEl.classList.remove('show');
+    renderLives();
+    showScreen(gameScreen);
+    genQuestion();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function gameOver() {
+    playing = false;
+    cancelAnimationFrame(rafId);
+    sfx.gameover();
+    const isRecord = score > highScore;
+    if (isRecord) { highScore = score; localStorage.setItem(HS_KEY, String(highScore)); }
+    $('finalScore').textContent = score;
+    $('finalBest').textContent = '🏅 歷史最高分：' + highScore;
+    $('newRecord').classList.toggle('hidden', !isRecord);
+    const msg = score >= 300 ? '乘法表大師，太強了！' :
+                score >= 150 ? '表現超棒，繼續加油！' :
+                score >= 60  ? '不錯喔，多練習會更好！' : '別氣餒，再挑戰一次吧！';
+    $('finalLine').textContent = msg;
+    $('overEmoji').textContent = score >= 300 ? '🏆' : score >= 150 ? '🌟' : '🐰';
+    showScreen(overScreen);
+    if (isRecord) {
+      const r = overScreen.getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + 60, '#ffd66b');
+      burst(r.left + r.width / 2 - 80, r.top + 100, '#ff8fb2');
+      burst(r.left + r.width / 2 + 80, r.top + 100, '#7cc5ff');
+    }
+  }
+
+  function goHome() {
+    ensureAudio(); sfx.click();
+    playing = false; cancelAnimationFrame(rafId);
+    startBest.textContent = highScore > 0 ? '🏅 目前最高分：' + highScore : '尚無紀錄，等你來創造！';
+    showScreen(startScreen);
+  }
+
+  /* ===== 事件綁定 ===== */
+  $('startBtn').addEventListener('click', startGame);
+  $('restartBtn').addEventListener('click', startGame);
+  $('homeBtn').addEventListener('click', goHome);
+
+  document.addEventListener('keydown', e => {
+    const k = e.key.toLowerCase();
+    if (!startScreen.classList.contains('hidden') || !overScreen.classList.contains('hidden')) {
+      if (k === 'enter' || k === ' ') { e.preventDefault(); startGame(); }
+      return;
+    }
+    if (!playing || locked) return;
+    if (k in KEYMAP) {
+      const btn = answersEl.children[KEYMAP[k]];
+      if (btn) btn.click();
+    }
+  });
+
+  /* 初始化 */
+  startBest.textContent = highScore > 0 ? '🏅 目前最高分：' + highScore : '尚無紀錄，等你來創造！';
+})();
+</script>
+</body>
+</html>

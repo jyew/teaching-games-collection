@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="學生的互動學習遊戲館：透過乘數表及折線圖小遊戲，讓數學學習更有趣。">
+  <meta name="theme-color" content="#f6f5f0">
+  <title>學習遊戲館 · Learning Arcade</title>
+  <style>
+    :root { color-scheme: light; --ink: #223d39; --muted: #526b65; --green: #246352; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #f6f5f0; font-family: "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif; line-height: 1.6; }
+    a { color: inherit; }
+    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+    .skip-link { position: absolute; left: 20px; top: -100px; padding: 12px 20px; background: white; z-index: 2; }
+    .skip-link:focus { top: 12px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 26px 0; border-bottom: 1px solid #dce3d9; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 18px; }
+    .brand-icon { display: grid; place-items: center; width: 42px; height: 42px; background: var(--green); color: white; border-radius: 14px; font-size: 23px; }
+    .header-note { color: var(--muted); font-size: 13px; }
+    .hero { display: grid; grid-template-columns: 1.4fr 1fr; align-items: center; gap: 40px; padding: 64px 0 52px; }
+    .eyebrow { margin: 0 0 14px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+    h1 { margin: 0 0 20px; font-size: clamp(36px, 5.5vw, 60px); line-height: 1.22; letter-spacing: -.035em; }
+    h1 span { color: var(--green); }
+    .intro { max-width: 520px; margin: 0; color: var(--muted); font-size: 16px; }
+    .hero-art { position: relative; min-height: 244px; display: grid; place-items: center; background: #e6ecdf; border-radius: 42% 58% 49% 51%; }
+    .art-main { font-size: 80px; transform: rotate(-8deg); }
+    .sticker { position: absolute; background: #fff; padding: 9px 18px; border-radius: 16px; box-shadow: 0 8px 24px #223d3910; font-weight: 800; }
+    .sticker.first { top: 22px; left: 12px; transform: rotate(-10deg); color: #a44c2d; background: #fff0dd; }
+    .sticker.second { bottom: 24px; right: 0; transform: rotate(8deg); color: #465aa6; background: #e9edff; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    h2 { margin: 0; font-size: 23px; }
+    .section-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+    .games { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .game { display: flex; flex-direction: column; border: 1px solid #e1e5dc; border-radius: 24px; overflow: hidden; text-decoration: none; background: #fff; transition: transform .2s, box-shadow .2s; }
+    .game:hover { transform: translateY(-5px); box-shadow: 0 16px 32px #223d3910; }
+    a:focus-visible { outline: 3px solid var(--green); outline-offset: 5px; }
+    .game-art { position: relative; height: 190px; display: grid; place-items: center; overflow: hidden; }
+    .pink { background: #f9e7e5; }
+    .blue { background: #e6edf8; }
+    .game-art::before, .game-art::after { content: ""; position: absolute; width: 150px; height: 150px; border-radius: 50%; background: #ffffff60; }
+    .game-art::before { left: -35px; bottom: -70px; }
+    .game-art::after { right: -40px; top: -70px; }
+    .rabbit { font-size: 78px; }
+    .equation { position: absolute; right: 24px; bottom: 20px; color: #944d54; font-size: 20px; font-weight: 800; transform: rotate(-8deg); }
+    .chart { width: 200px; height: 130px; }
+    .game-content { display: flex; flex-direction: column; flex: 1; padding: 26px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .tag { font-size: 12px; font-weight: 700; padding: 4px 10px; background: #f1f4ee; border-radius: 7px; color: #526b65; }
+    h3 { font-size: 22px; margin: 0 0 8px; }
+    .description { color: var(--muted); margin: 0 0 24px; font-size: 14px; }
+    .play { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 16px; border-top: 1px solid #edf0e9; font-weight: 800; font-size: 14px; color: var(--green); }
+    .arrow { display: grid; place-items: center; background: #edf3e9; width: 32px; height: 32px; border-radius: 50%; }
+    .tip { display: flex; gap: 14px; padding: 22px 26px; margin: 30px 0 52px; border-radius: 18px; background: #eaf0e4; font-size: 14px; }
+    .tip p { margin: 0; }
+    footer { border-top: 1px solid #dce3d9; padding: 24px 0 32px; display: flex; justify-content: space-between; gap: 16px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 32px); }
+      .header-note { display: none; }
+      .hero { grid-template-columns: 1fr; gap: 24px; padding: 38px 0; }
+      .hero-art { min-height: 170px; width: min(100%, 330px); justify-self: center; }
+      .art-main { font-size: 60px; }
+      .games { grid-template-columns: 1fr; }
+      .section-heading { align-items: start; flex-direction: column; gap: 4px; }
+      footer { flex-direction: column; gap: 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .game { transition: none; } .game:hover { transform: none; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#games">跳到遊戲列表</a>
+  <div class="wrap">
+    <header>
+      <div class="brand"><span class="brand-icon" aria-hidden="true">✦</span> 學習遊戲館</div>
+      <span class="header-note" lang="en">A little play. A lot of learning.</span>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="welcome">
+        <div>
+          <p class="eyebrow" lang="en">WELCOME TO THE LEARNING ARCADE</p>
+          <h1 id="welcome">把好奇心打開，<br><span>一起玩出新知識。</span></h1>
+          <p class="intro">歡迎來到我們的互動學習小天地！選一個遊戲，動動腦、試一試，用自己的節奏探索數學的樂趣。</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="sticker first">2 × 3 = 6</span>
+          <span class="art-main">🎒</span>
+          <span class="sticker second">探索 · 練習 · 成長 ✦</span>
+        </div>
+      </section>
+      <section id="games" aria-labelledby="games-heading">
+        <div class="section-heading">
+          <h2 id="games-heading">今天想挑戰什麼？</h2>
+          <p>選擇遊戲，立即開始 · 不用登入</p>
+        </div>
+        <div class="games">
+          <!-- To add a game, copy a game link and update its href, title, tags, and description. -->
+          <a class="game" href="./multiplication_game.html">
+            <div class="game-art pink" aria-hidden="true"><span class="rabbit">🐰</span><span class="equation">7 × 8 = ?</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">數學</span><span class="tag">乘數表</span><span class="tag">限時挑戰</span></div>
+              <h3>乘數表大冒險</h3>
+              <p class="description">和小兔子一起挑戰乘法！選出正確答案、累積連擊，看看你能創下多高的紀錄。</p>
+              <span class="play">開始冒險 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" href="./折線圖大冒險_六年級互動課件.html">
+            <div class="game-art blue" aria-hidden="true">
+              <svg class="chart" viewBox="0 0 200 130" fill="none">
+                <path d="M20 15V112H185" stroke="#a8b9d5" stroke-width="3" stroke-linecap="round"/>
+                <path d="M22 87L62 50L102 70L142 25L180 42" stroke="#4d74b6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <g stroke="white" stroke-width="3"><circle cx="22" cy="87" r="7" fill="#dd8598"/><circle cx="62" cy="50" r="7" fill="#e7ad52"/><circle cx="102" cy="70" r="7" fill="#6da78b"/><circle cx="142" cy="25" r="7" fill="#9b85c6"/><circle cx="180" cy="42" r="7" fill="#dd8598"/></g>
+              </svg>
+            </div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">數學</span><span class="tag">六年級</span><span class="tag">四關挑戰</span></div>
+              <h3>折線圖大冒險</h3>
+              <p class="description">從認識數據點到觀察變化，透過四個互動關卡，一步一步成為讀圖小達人。</p>
+              <span class="play">開始探索 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+        </div>
+      </section>
+      <aside class="tip"><span aria-hidden="true">💡</span><p><strong>學習小提醒</strong><br>答錯也沒關係，再觀察、再試一次！可以自己練習，也可以和同學一起討論。</p></aside>
+    </main>
+    <footer><span>學習遊戲館 · Learning Arcade</span><span>為學生而設計，讓學習多一點樂趣。</span></footer>
+  </div>
+</body>
+</html>
