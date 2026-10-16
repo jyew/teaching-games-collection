@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分數拼圖屋 · P3 數學</title>
+  <link rel="stylesheet" href="../assets/math-games.css">
+  <script src="../assets/math-games.js" defer></script>
+</head>
+<body data-grade="p3">
+  <main>
+    <a href="../index.html">← 返回遊戲館</a>
+    <header><p id="concept">P3 · 等分與分數</p><h1 id="title">分數拼圖屋</h1></header>
+    <p class="tip" id="tip">分母表示平均分成多少份，分子表示取了多少份。</p>
+    <p>每回合 10 題，不限時。選出答案後，一起看看解說！</p>
+    <noscript><p>請啟用 JavaScript 來玩這個互動遊戲。</p></noscript>
+    <p id="loading">遊戲載入中；若未能開始，請重新整理並檢查遊戲檔案是否齊全。</p>
+    <section class="panel" id="play" aria-label="數學挑戰" hidden>
+      <p id="progress"></p><progress id="meter" max="10" value="0" aria-label="已完成題數"></progress>
+      <h2 id="prompt" tabindex="-1"></h2>
+      <div class="visual" id="visual"></div>
+      <div class="answers" id="answers" role="group" aria-labelledby="prompt"></div>
+      <p id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+      <button class="primary" id="next" type="button" hidden>下一題</button>
+    </section>
+    <section class="panel" id="summary" aria-label="挑戰成績" hidden>
+      <h2 id="result" tabindex="-1"></h2><p id="encouragement"></p>
+      <button class="primary" id="restart" type="button">再玩一次</button>
+    </section>
+  </main>
+</body>
+</html>

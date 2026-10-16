@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="學生的互動學習遊戲館：透過乘數表及折線圖小遊戲，讓數學學習更有趣。">
+  <meta name="description" content="P1 至 P6 互動數學遊戲館：加法、位值、分數、周界、面積、百分數、乘數表及折線圖。">
   <meta name="theme-color" content="#f6f5f0">
   <title>學習遊戲館 · Learning Arcade</title>
   <style>
@@ -31,10 +31,16 @@
     .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
     h2 { margin: 0; font-size: 23px; }
     .section-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .filters[hidden], .game[hidden] { display: none; }
+    .filter { padding: 8px 16px; border: 1px solid #cad6c8; border-radius: 999px; background: #fff; color: var(--green); font: inherit; font-weight: 700; cursor: pointer; }
+    .filter[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+    .filter-status, .empty-state { color: var(--muted); font-size: 14px; }
+    .empty-state { padding: 32px 24px; border: 1px dashed #cad6c8; border-radius: 18px; text-align: center; }
     .games { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
     .game { display: flex; flex-direction: column; border: 1px solid #e1e5dc; border-radius: 24px; overflow: hidden; text-decoration: none; background: #fff; transition: transform .2s, box-shadow .2s; }
     .game:hover { transform: translateY(-5px); box-shadow: 0 16px 32px #223d3910; }
-    a:focus-visible { outline: 3px solid var(--green); outline-offset: 5px; }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--green); outline-offset: 5px; }
     .game-art { position: relative; height: 190px; display: grid; place-items: center; overflow: hidden; }
     .pink { background: #f9e7e5; }
     .blue { background: #e6edf8; }
@@ -90,20 +96,84 @@
       <section id="games" aria-labelledby="games-heading">
         <div class="section-heading">
           <h2 id="games-heading">今天想挑戰什麼？</h2>
-          <p>選擇遊戲，立即開始 · 不用登入</p>
+          <p>按年級選擇遊戲，立即開始 · 不用登入</p>
         </div>
-        <div class="games">
-          <!-- To add a game, copy a game link and update its href, title, tags, and description. -->
-          <a class="game" href="./multiplication_game.html">
+        <div class="filters" role="group" aria-label="按年級篩選遊戲" hidden>
+          <button class="filter" type="button" data-grade="all" aria-pressed="true" aria-controls="game-list">全部</button>
+          <button class="filter" type="button" data-grade="p1" aria-pressed="false" aria-controls="game-list">P1 · 一年級</button>
+          <button class="filter" type="button" data-grade="p2" aria-pressed="false" aria-controls="game-list">P2 · 二年級</button>
+          <button class="filter" type="button" data-grade="p3" aria-pressed="false" aria-controls="game-list">P3 · 三年級</button>
+          <button class="filter" type="button" data-grade="p4" aria-pressed="false" aria-controls="game-list">P4 · 四年級</button>
+          <button class="filter" type="button" data-grade="p5" aria-pressed="false" aria-controls="game-list">P5 · 五年級</button>
+          <button class="filter" type="button" data-grade="p6" aria-pressed="false" aria-controls="game-list">P6 · 六年級</button>
+        </div>
+        <p class="filter-status" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+        <div class="games" id="game-list">
+          <!-- To add a game, copy a game link and update its grade, href, title, tags, and description. -->
+          <a class="game" data-grade="p1" href="./p1/addition-stars.html">
+            <div class="game-art pink" aria-hidden="true"><span class="rabbit">★ + ★</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">P1 · 一年級</span><span class="tag">數學</span><span class="tag">加法</span></div>
+              <h3>加法星星站</h3>
+              <p class="description">把兩組星星合起來，練習 20 以內的加法。數一數，理解「合共有多少」。</p>
+              <span class="play">收集星星 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" data-grade="p2" href="./p2/multiplication_game.html">
             <div class="game-art pink" aria-hidden="true"><span class="rabbit">🐰</span><span class="equation">7 × 8 = ?</span></div>
             <div class="game-content">
-              <div class="tags"><span class="tag">數學</span><span class="tag">乘數表</span><span class="tag">限時挑戰</span></div>
+              <div class="tags"><span class="tag">P2 · 二年級</span><span class="tag">數學</span><span class="tag">乘數表</span><span class="tag">限時挑戰</span></div>
               <h3>乘數表大冒險</h3>
               <p class="description">和小兔子一起挑戰乘法！選出正確答案、累積連擊，看看你能創下多高的紀錄。</p>
               <span class="play">開始冒險 <span class="arrow" aria-hidden="true">↗</span></span>
             </div>
           </a>
-          <a class="game" href="./折線圖大冒險_六年級互動課件.html">
+          <a class="game" data-grade="p2" href="./p2/place-value.html">
+            <div class="game-art blue" aria-hidden="true"><span class="rabbit">123</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">P2 · 二年級</span><span class="tag">數學</span><span class="tag">位值</span></div>
+              <h3>位值尋寶隊</h3>
+              <p class="description">走進百位、十位和個位的寶藏格，找出三位數中每個數字代表的值。</p>
+              <span class="play">尋找寶藏 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" data-grade="p3" href="./p3/fraction-puzzle.html">
+            <div class="game-art pink" aria-hidden="true"><span class="rabbit">1/2</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">P3 · 三年級</span><span class="tag">數學</span><span class="tag">分數</span></div>
+              <h3>分數拼圖屋</h3>
+              <p class="description">觀察平均分好的色塊，認識分母與分子，把部分和整體連起來。</p>
+              <span class="play">拼出分數 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" data-grade="p4" href="./p4/perimeter-builder.html">
+            <div class="game-art blue" aria-hidden="true"><span class="rabbit">▭</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">P4 · 四年級</span><span class="tag">數學</span><span class="tag">周界</span></div>
+              <h3>周界小建築師</h3>
+              <p class="description">沿長方形四周走一圈，把四條邊加起來，計算周界有多長。</p>
+              <span class="play">建造圍欄 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" data-grade="p5" href="./p5/triangle-area.html">
+            <div class="game-art pink" aria-hidden="true"><span class="rabbit">△</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">P5 · 五年級</span><span class="tag">數學</span><span class="tag">面積</span></div>
+              <h3>三角形面積工房</h3>
+              <p class="description">找出三角形的底和垂直的高，運用「底 × 高 ÷ 2」計算面積。</p>
+              <span class="play">探索面積 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" data-grade="p6" href="./p6/percentage-quest.html">
+            <div class="game-art blue" aria-hidden="true"><span class="rabbit">%</span></div>
+            <div class="game-content">
+              <div class="tags"><span class="tag">P6 · 六年級</span><span class="tag">數學</span><span class="tag">百分數</span></div>
+              <h3>百分數探險家</h3>
+              <p class="description">從百分比長條圖理解部分與全部，算出一個數的百分之幾。</p>
+              <span class="play">出發探險 <span class="arrow" aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+          <a class="game" data-grade="p6" href="./p6/折線圖大冒險_六年級互動課件.html">
             <div class="game-art blue" aria-hidden="true">
               <svg class="chart" viewBox="0 0 200 130" fill="none">
                 <path d="M20 15V112H185" stroke="#a8b9d5" stroke-width="3" stroke-linecap="round"/>
@@ -112,17 +182,46 @@
               </svg>
             </div>
             <div class="game-content">
-              <div class="tags"><span class="tag">數學</span><span class="tag">六年級</span><span class="tag">四關挑戰</span></div>
+              <div class="tags"><span class="tag">P6 · 六年級</span><span class="tag">數學</span><span class="tag">四關挑戰</span></div>
               <h3>折線圖大冒險</h3>
               <p class="description">從認識數據點到觀察變化，透過四個互動關卡，一步一步成為讀圖小達人。</p>
               <span class="play">開始探索 <span class="arrow" aria-hidden="true">↗</span></span>
             </div>
           </a>
         </div>
+        <p class="empty-state" hidden>這個年級暫時未有遊戲，請選擇其他年級，稍後再來看看！</p>
       </section>
       <aside class="tip"><span aria-hidden="true">💡</span><p><strong>學習小提醒</strong><br>答錯也沒關係，再觀察、再試一次！可以自己練習，也可以和同學一起討論。</p></aside>
     </main>
     <footer><span>學習遊戲館 · Learning Arcade</span><span>為學生而設計，讓學習多一點樂趣。</span></footer>
   </div>
+  <script>
+    const filters = document.querySelector('.filters');
+    const filterButtons = filters.querySelectorAll('.filter');
+    const games = document.querySelectorAll('.game');
+    const status = document.querySelector('.filter-status');
+    const emptyState = document.querySelector('.empty-state');
+
+    function filterGames(selectedButton) {
+      const grade = selectedButton.dataset.grade;
+      let count = 0;
+      games.forEach(game => {
+        game.hidden = grade !== 'all' && game.dataset.grade !== grade;
+        if (!game.hidden) count++;
+      });
+      filterButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button === selectedButton));
+      });
+      status.textContent = `${selectedButton.textContent}：${count} 個遊戲`;
+      emptyState.hidden = count !== 0;
+    }
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => filterGames(button));
+    });
+    filterGames(filterButtons[0]);
+    status.hidden = false;
+    filters.hidden = false;
+  </script>
 </body>
 </html>
