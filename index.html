@@ -44,6 +44,12 @@
     .game-art { position: relative; height: 190px; display: grid; place-items: center; overflow: hidden; }
     .pink { background: #f9e7e5; }
     .blue { background: #e6edf8; }
+    .gold { background: #fff0cf; }
+    .mint { background: #e0efe6; }
+    .peach { background: #ffeadb; }
+    .lavender { background: #ede6f7; }
+    .aqua { background: #dff0f2; }
+    .illustration { width: 220px; max-width: 90%; height: 150px; position: relative; z-index: 1; }
     .game-art::before, .game-art::after { content: ""; position: absolute; width: 150px; height: 150px; border-radius: 50%; background: #ffffff60; }
     .game-art::before { left: -35px; bottom: -70px; }
     .game-art::after { right: -40px; top: -70px; }
@@ -111,7 +117,18 @@
         <div class="games" id="game-list">
           <!-- To add a game, copy a game link and update its grade, href, title, tags, and description. -->
           <a class="game" data-grade="p1" href="./p1/addition-stars.html">
-            <div class="game-art pink" aria-hidden="true"><span class="rabbit">★ + ★</span></div>
+            <div class="game-art gold" aria-hidden="true">
+              <svg class="illustration" viewBox="0 0 220 150" fill="none">
+                <ellipse cx="110" cy="133" rx="65" ry="8" fill="#e7d5a6"/>
+                <path d="M110 17L130 55L172 61L142 91L149 132L110 112L71 132L78 91L48 61L90 55Z" fill="#f5c451" stroke="#b57a27" stroke-width="3" stroke-linejoin="round"/>
+                <ellipse cx="95" cy="77" rx="4" ry="6" fill="#684b31"/>
+                <ellipse cx="125" cy="77" rx="4" ry="6" fill="#684b31"/>
+                <path d="M100 92Q110 103 120 92" stroke="#684b31" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="83" cy="88" r="7" fill="#ed9c72"/><circle cx="137" cy="88" r="7" fill="#ed9c72"/>
+                <path d="M27 27V43M19 35H35M189 84V100M181 92H197" stroke="#b57a27" stroke-width="4" stroke-linecap="round"/>
+                <path d="M177 18L181 27L191 28L184 35L186 45L177 40L168 45L170 35L163 28L173 27Z" fill="#e99879"/>
+              </svg>
+            </div>
             <div class="game-content">
               <div class="tags"><span class="tag">P1 · 一年級</span><span class="tag">數學</span><span class="tag">加法</span></div>
               <h3>加法星星站</h3>
@@ -129,7 +146,23 @@
             </div>
           </a>
           <a class="game" data-grade="p2" href="./p2/place-value.html">
-            <div class="game-art blue" aria-hidden="true"><span class="rabbit">123</span></div>
+            <div class="game-art mint" aria-hidden="true">
+              <svg class="illustration" viewBox="0 0 220 150" fill="none">
+                <ellipse cx="110" cy="135" rx="81" ry="8" fill="#c4dccc"/>
+                <path d="M43 78V58Q43 28 73 28H147Q177 28 177 58V78Z" fill="#dba76a" stroke="#805939" stroke-width="3"/>
+                <path d="M43 67H177V123Q177 130 170 130H50Q43 130 43 123Z" fill="#bf8551" stroke="#805939" stroke-width="3"/>
+                <path d="M60 78V126M160 78V126" stroke="#f4d18a" stroke-width="9"/>
+                <rect x="91" y="82" width="38" height="28" rx="6" fill="#f4d18a" stroke="#805939" stroke-width="3"/>
+                <circle cx="110" cy="95" r="4" fill="#805939"/>
+                <rect x="27" y="52" width="47" height="40" rx="9" fill="#7da9c3" stroke="#486c89" stroke-width="2"/>
+                <rect x="86" y="42" width="47" height="40" rx="9" fill="#ead17f" stroke="#a98737" stroke-width="2"/>
+                <rect x="145" y="52" width="47" height="40" rx="9" fill="#da9caa" stroke="#99596c" stroke-width="2"/>
+                <g fill="#223d39" font-family="system-ui, sans-serif" font-size="25" font-weight="800" text-anchor="middle">
+                  <text x="51" y="81">1</text><text x="110" y="71">2</text><text x="169" y="81">3</text>
+                </g>
+                <path d="M188 16V32M180 24H196" stroke="#56856a" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
             <div class="game-content">
               <div class="tags"><span class="tag">P2 · 二年級</span><span class="tag">數學</span><span class="tag">位值</span></div>
               <h3>位值尋寶隊</h3>
@@ -138,7 +171,18 @@
             </div>
           </a>
           <a class="game" data-grade="p3" href="./p3/fraction-puzzle.html">
-            <div class="game-art pink" aria-hidden="true"><span class="rabbit">1/2</span></div>
+            <div class="game-art peach" aria-hidden="true">
+              <svg class="illustration" viewBox="0 0 220 150" fill="none">
+                <ellipse cx="106" cy="132" rx="70" ry="8" fill="#e9cfb8"/>
+                <circle cx="96" cy="77" r="57" fill="#fffaf1" stroke="#d8b99a" stroke-width="3"/>
+                <path d="M96 77L96 27A50 50 0 1 0 146 77Z" fill="#f2cb6b" stroke="#b57a3e" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M96 77H46M96 77V127" stroke="#b57a3e" stroke-width="3"/>
+                <path d="M112 62V12A50 50 0 0 1 162 62Z" fill="#f2cb6b" stroke="#b57a3e" stroke-width="3" stroke-linejoin="round"/>
+                <g fill="#ce755f"><circle cx="74" cy="49" r="7"/><circle cx="66" cy="95" r="7"/><circle cx="116" cy="104" r="7"/><circle cx="129" cy="42" r="7"/></g>
+                <g fill="#6b9470"><ellipse cx="63" cy="69" rx="4" ry="7" transform="rotate(30 63 69)"/><ellipse cx="85" cy="109" rx="4" ry="7" transform="rotate(-30 85 109)"/><ellipse cx="132" cy="88" rx="4" ry="7"/></g>
+                <path d="M181 91V123M174 91V103Q174 110 181 110Q188 110 188 103V91" stroke="#9b8c7d" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
             <div class="game-content">
               <div class="tags"><span class="tag">P3 · 三年級</span><span class="tag">數學</span><span class="tag">分數</span></div>
               <h3>分數拼圖屋</h3>
@@ -147,7 +191,21 @@
             </div>
           </a>
           <a class="game" data-grade="p4" href="./p4/perimeter-builder.html">
-            <div class="game-art blue" aria-hidden="true"><span class="rabbit">▭</span></div>
+            <div class="game-art mint" aria-hidden="true">
+              <svg class="illustration" viewBox="0 0 220 150" fill="none">
+                <rect x="35" y="70" width="150" height="60" rx="12" fill="#b8d4a6"/>
+                <path d="M87 85V53H137V85" fill="#fff6df" stroke="#7b7158" stroke-width="3"/>
+                <path d="M78 55L112 27L146 55Z" fill="#d88b72" stroke="#9c6154" stroke-width="3" stroke-linejoin="round"/>
+                <rect x="105" y="62" width="15" height="23" rx="3" fill="#88a9b8"/>
+                <path d="M45 77H175V119H45Z" stroke="#947452" stroke-width="4" stroke-dasharray="6 6"/>
+                <g fill="#fff6df" stroke="#947452" stroke-width="2">
+                  <path d="M39 122V77L45 71L51 77V122Z"/><path d="M169 122V77L175 71L181 77V122Z"/>
+                  <path d="M83 126V113L89 107L95 113V126Z"/><path d="M125 126V113L131 107L137 113V126Z"/>
+                </g>
+                <path d="M47 16H173V31H47Z" fill="#f0cd78" stroke="#a78742" stroke-width="2"/>
+                <path d="M61 17V25M77 17V22M93 17V25M109 17V22M125 17V25M141 17V22M157 17V25" stroke="#a78742" stroke-width="2"/>
+              </svg>
+            </div>
             <div class="game-content">
               <div class="tags"><span class="tag">P4 · 四年級</span><span class="tag">數學</span><span class="tag">周界</span></div>
               <h3>周界小建築師</h3>
@@ -156,7 +214,23 @@
             </div>
           </a>
           <a class="game" data-grade="p5" href="./p5/triangle-area.html">
-            <div class="game-art pink" aria-hidden="true"><span class="rabbit">△</span></div>
+            <div class="game-art lavender" aria-hidden="true">
+              <svg class="illustration" viewBox="0 0 220 150" fill="none">
+                <ellipse cx="110" cy="135" rx="74" ry="7" fill="#d7cce7"/>
+                <path d="M42 121L103 22L165 121Z" fill="#baa4d7" stroke="#745899" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M103 22V121" stroke="#fffaf4" stroke-width="3" stroke-dasharray="6 5"/>
+                <path d="M103 106H118V121" stroke="#745899" stroke-width="3"/>
+                <path d="M46 132H162" stroke="#745899" stroke-width="3" stroke-linecap="round"/>
+                <path d="M46 128V136M162 128V136" stroke="#745899" stroke-width="3"/>
+                <g transform="rotate(24 179 77)">
+                  <path d="M172 30H186V109L179 124L172 109Z" fill="#efc878" stroke="#a88342" stroke-width="2"/>
+                  <path d="M172 43H186M179 45V107" stroke="#a88342" stroke-width="2"/>
+                  <path d="M176 118L179 124L182 118" fill="#745899"/>
+                  <path d="M172 30V24Q179 17 186 24V30" fill="#d78f9e" stroke="#a88342" stroke-width="2"/>
+                </g>
+                <path d="M29 37V51M22 44H36" stroke="#9476b3" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
             <div class="game-content">
               <div class="tags"><span class="tag">P5 · 五年級</span><span class="tag">數學</span><span class="tag">面積</span></div>
               <h3>三角形面積工房</h3>
@@ -165,7 +239,20 @@
             </div>
           </a>
           <a class="game" data-grade="p6" href="./p6/percentage-quest.html">
-            <div class="game-art blue" aria-hidden="true"><span class="rabbit">%</span></div>
+            <div class="game-art aqua" aria-hidden="true">
+              <svg class="illustration" viewBox="0 0 220 150" fill="none">
+                <path d="M25 113Q45 72 66 100T106 85T151 104T195 56" stroke="#8ebabc" stroke-width="3" stroke-dasharray="5 6" stroke-linecap="round"/>
+                <circle cx="110" cy="23" r="10" fill="#f1d292" stroke="#977a45" stroke-width="3"/>
+                <circle cx="110" cy="83" r="53" fill="#f1d292" stroke="#977a45" stroke-width="3"/>
+                <circle cx="110" cy="83" r="43" fill="#fffaf0" stroke="#d5b574" stroke-width="2"/>
+                <path d="M110 43V50M110 116V123M70 83H77M143 83H150" stroke="#977a45" stroke-width="3" stroke-linecap="round"/>
+                <path d="M96 101L125 65" stroke="#43868b" stroke-width="7" stroke-linecap="round"/>
+                <circle cx="94" cy="69" r="8" fill="#d39092" stroke="#a56671" stroke-width="2"/>
+                <circle cx="127" cy="99" r="8" fill="#d39092" stroke="#a56671" stroke-width="2"/>
+                <path d="M180 24V43M173 24H190L183 32L190 39H180" fill="#d39092" stroke="#a56671" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="28" cy="115" r="5" fill="#43868b"/>
+              </svg>
+            </div>
             <div class="game-content">
               <div class="tags"><span class="tag">P6 · 六年級</span><span class="tag">數學</span><span class="tag">百分數</span></div>
               <h3>百分數探險家</h3>
