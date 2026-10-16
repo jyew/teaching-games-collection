@@ -28,6 +28,12 @@ Use a **public repository** for free GitHub Pages hosting with GitHub Free. A pu
 
 These Traditional Chinese activities practise concepts commonly taught in Hong Kong primary maths; they are not a complete syllabus or an official curriculum certification. Each new game has randomly generated questions, visual aids, explanations for correct and incorrect answers, a 10-question untimed round, and replay. No accounts, tracking, external libraries, or network access are required.
 
+### Scores and game endings
+
+- The six concept games show a sticky top scoreboard with **score / 10**, completed questions, questions remaining, and a progress bar. Each correct first answer earns one point; all 10 questions must be answered to finish, regardless of score. The scoreboard remains visible at the results screen and resets on replay.
+- Multiplication retains its unlimited combo/speed scoring. The top display labels the score as **uncapped**, shows **remaining lives / 3**, correct answers, and seconds left for the current question. There is no fixed question total; the game ends when all three lives are lost.
+- The line-chart activity shows **stages cleared / 4**, the current stage, stages remaining, and the second-stage quiz's **score / 3** (2 points to pass). These are separate measures: completing an interactive stage is not a quiz point. All four stages must be cleared to complete the adventure; cleared stages stay credited when revisiting tabs, while the second-stage quiz score resets when restarting that quiz.
+
 | Grade | Game | Concept |
 | --- | --- | --- |
 | P1 | [加法星星站](p1/addition-stars.html) | Addition within 20 |

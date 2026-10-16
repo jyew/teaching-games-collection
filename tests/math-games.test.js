@@ -3,6 +3,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 const { topics, makeQuestion } = require('../assets/math-games.js');
 
 function seededRandom(seed) {
@@ -66,6 +67,64 @@ for (const grade of Object.keys(topics)) {
 test('unknown grades fail explicitly', () => {
   assert.throws(() => makeQuestion('p7'), /Unknown grade/);
 });
+for (const grade of Object.keys(topics)) {
+  test(`${grade}: scoreboard tracks answers, completion, and replay`, () => {
+    function element() {
+      return {
+        textContent: '', hidden: false, value: 0, children: [], handlers: {},
+        classList: { add() {} },
+        addEventListener(name, handler) { this.handlers[name] = handler; },
+        append(child) { this.children.push(child); },
+        replaceChildren() { this.children = []; },
+        focus() {},
+        click() { if (!this.disabled) this.handlers.click(); }
+      };
+    }
+    const elements = new Map();
+    const get = id => {
+      if (!elements.has(id)) elements.set(id, element());
+      return elements.get(id);
+    };
+    const context = vm.createContext({
+      document: { body: { dataset: { grade } }, getElementById: get, createElement: element }
+    });
+    vm.runInContext(fs.readFileSync(path.resolve(__dirname, '../assets/math-games.js'), 'utf8'), context);
+    assert.equal(get('current-score').textContent, '得分：0 / 10');
+    assert.match(get('round-progress').textContent, /已完成 0 \/ 10 題 · 尚餘 10 題/);
+    for (let round = 1; round <= 10; round++) {
+      const prompt = get('prompt').textContent;
+      const numbers = prompt.match(/\d+/g).map(Number);
+      const answer = {
+        p1: () => numbers[0] + numbers[1],
+        p2: () => Math.floor(numbers[0] / (prompt.includes('百位') ? 100 : prompt.includes('十位') ? 10 : 1)) % 10 * (prompt.includes('百位') ? 100 : prompt.includes('十位') ? 10 : 1),
+        p3: () => (get('visual').innerHTML.match(/class="filled"/g) || []).length,
+        p4: () => (numbers[0] + numbers[1]) * 2,
+        p5: () => numbers[0] * numbers[1] / 2,
+        p6: () => numbers[0] * numbers[1] / 100
+      }[grade]();
+      const options = get('answers').children;
+      const chosen = options.find(button => round === 1
+        ? parseInt(button.textContent, 10) !== answer
+        : parseInt(button.textContent, 10) === answer);
+      chosen.click();
+      chosen.click();
+      assert.equal(get('current-score').textContent, `得分：${round - 1} / 10`);
+      assert.equal(get('score-meter').value, round);
+      assert.ok(options.every(button => button.disabled));
+      assert.equal(get('round-progress').textContent, round === 10
+        ? '已完成 10 / 10 題 · 回合結束'
+        : `已完成 ${round} / 10 題 · 尚餘 ${10 - round} 題`);
+      get('next').click();
+    }
+    assert.equal(get('summary').hidden, false);
+    assert.equal(get('current-score').textContent, '得分：9 / 10');
+    get('restart').click();
+    assert.equal(get('current-score').textContent, '得分：0 / 10');
+    assert.equal(get('score-meter').value, 0);
+    assert.equal(get('summary').hidden, true);
+    assert.match(get('round-progress').textContent, /尚餘 10 題/);
+  });
+}
 test('homepage game links and new game assets exist', () => {
   const root = path.resolve(__dirname, '..');
   const home = fs.readFileSync(path.join(root, 'index.html'), 'utf8');

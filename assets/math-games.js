@@ -107,6 +107,15 @@ if (typeof document !== 'undefined') {
   const total = 10;
   let question, round, score, answered;
 
+  function updateScoreboard() {
+    const completed = round - 1 + (answered ? 1 : 0);
+    get('current-score').textContent = `得分：${score} / ${total}`;
+    get('round-progress').textContent = completed === total
+      ? `已完成 ${total} / ${total} 題 · 回合結束`
+      : `已完成 ${completed} / ${total} 題 · 尚餘 ${total - completed} 題`;
+    get('score-meter').value = completed;
+  }
+
   function showQuestion() {
     answered = false;
     question = MathGames.makeQuestion(grade);
@@ -117,6 +126,7 @@ if (typeof document !== 'undefined') {
     get('answers').replaceChildren();
     get('feedback').textContent = '';
     get('next').hidden = true;
+    updateScoreboard();
     for (const value of question.choices) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -134,6 +144,7 @@ if (typeof document !== 'undefined') {
         get('feedback').textContent = `${correct ? '答對了！' : '再學一學：'}${question.explanation}`;
         get('progress').textContent = `第 ${round} / ${total} 題 · 答對 ${score} 題`;
         get('meter').value = round;
+        updateScoreboard();
         get('next').textContent = round === total ? '查看成績' : '下一題';
         get('next').hidden = false;
         get('next').focus();

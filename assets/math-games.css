@@ -5,6 +5,9 @@ body { margin: 0; background: #f6f5f0; color: var(--ink); font-family: "Microsof
 main { max-width: 780px; margin: 0 auto; padding: 24px 20px 48px; }
 a { color: var(--green); }
 header { margin: 24px 0; }
+.scoreboard { position: sticky; top: 0; z-index: 2; margin-top: 16px; padding: 12px 18px; background: #eaf0e4; border: 2px solid #cad6c8; border-radius: 16px; font-variant-numeric: tabular-nums; box-shadow: 0 4px 12px #223d3910; }
+.scoreboard strong { display: block; color: var(--green); font-size: 23px; }
+.scoreboard p { margin: 0; font-size: 14px; }
 h1 { font-size: clamp(28px, 6vw, 40px); margin: 0; }
 #concept { color: var(--muted); font-weight: 700; }
 .panel { padding: clamp(18px, 4vw, 32px); background: white; border: 1px solid #dce3d9; border-radius: 24px; }

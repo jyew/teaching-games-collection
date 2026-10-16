@@ -10,6 +10,11 @@
 <body data-grade="p1">
   <main>
     <a href="../index.html">← 返回遊戲館</a>
+    <aside class="scoreboard" aria-label="得分與回合進度">
+      <strong id="current-score">得分：0 / 10</strong>
+      <p id="round-progress">已完成 0 / 10 題 · 尚餘 10 題</p>
+      <progress id="score-meter" max="10" value="0" aria-label="回合完成進度"></progress>
+    </aside>
     <header><p id="concept">P1 · 20 以內的加法</p><h1 id="title">加法星星站</h1></header>
     <p class="tip" id="tip">把兩組星星合起來，數一數共有多少顆。</p>
     <p>每回合 10 題，不限時。選出答案後，一起看看解說！</p>

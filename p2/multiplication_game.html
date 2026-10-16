@@ -193,12 +193,14 @@
   <div class="card hidden" id="gameScreen">
     <div class="hud">
       <div class="score-board">
-        <div class="score-label">SCORE 分數</div>
+        <div class="score-label">SCORE 分數（無上限）</div>
         <div id="score">0</div>
       </div>
       <div class="level-tag" id="levelTag">Lv.1</div>
       <div class="lives" id="lives"></div>
     </div>
+    <p id="roundStatus" style="font-size:14px;color:#755c82;font-variant-numeric:tabular-nums"></p>
+    <p style="font-size:13px;color:#755c82">不限題數；愛心用完即結束。答錯或每題超時扣 1 顆愛心。</p>
     <div class="combo-box"><span id="combo">🔥 Combo x2</span></div>
     <div class="timer-track"><div id="timerBar"></div></div>
     <div class="question-box"><div id="question">7 × 8 = ?</div></div>
@@ -329,6 +331,11 @@
       if (i >= lives) sp.classList.add('lost');
       livesEl.appendChild(sp);
     }
+    updateRoundStatus();
+  }
+
+  function updateRoundStatus() {
+    $('roundStatus').textContent = '答對 ' + correctCount + ' 題 · 剩餘愛心 ' + lives + ' / 3 · 本題剩餘 ' + Math.ceil(timeLeft / 1000) + ' 秒';
   }
 
   function setScore(v) {
@@ -376,6 +383,7 @@
     const pct = Math.max(0, timeLeft / timeLimit * 100);
     timerBar.style.width = pct + '%';
     timerBar.className = pct < 20 ? 'danger' : (pct < 45 ? 'warn' : '');
+    updateRoundStatus();
   }
 
   function loop(now) {
@@ -403,6 +411,7 @@
     combo++; correctCount++;
     const gained = 10 * Math.min(combo, 5) + Math.ceil(timeLeft / 1000);
     setScore(score + gained);
+    updateRoundStatus();
     sfx.correct();
     flash('good');
     btn.classList.add('correct');
